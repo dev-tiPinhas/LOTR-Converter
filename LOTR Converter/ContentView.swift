@@ -10,6 +10,10 @@ import SwiftUI
 struct ContentView: View {
     @State var leftAmount = ""
     @State var rightAmount = ""
+    @State var leftAmountTemp = ""
+    @State var rightAmountTemp = ""
+    @State var leftTyping = false
+    @State var rightTyping = false
     @State var leftCurrency: Currency = .silverPiece
     @State var rightCurency: Currency = .goldPiece
     @State var showSelectCurrency = false
@@ -51,11 +55,20 @@ struct ContentView: View {
                             SelectCurrency(leftCurrency: $leftCurrency, rightCurency: $rightCurency)
                         }
                         
-                        TextField("Amount", text: $leftAmount)
+                        TextField("Amount", text: $leftAmount, onEditingChanged: { typing in
+                            leftTyping = typing
+                            leftAmountTemp = leftAmount
+                        })
                             .padding(7)
                             .background(Color(UIColor.systemGray6))
                             .cornerRadius(7)
                             .keyboardType(.numberPad)
+                            .onChange(of: leftTyping ? leftAmount : leftAmountTemp, { oldValue, newValue in
+                                rightAmount = leftCurrency.convert(amountString: leftAmount, to: rightCurency)
+                            })
+                            .onChange(of: leftCurrency, { oldValue, newValue in
+                                leftAmount = rightCurency.convert(amountString: rightAmount, to: leftCurrency)
+                            })
                     }
                     
                     Image(systemName: "equal")
@@ -82,12 +95,21 @@ struct ContentView: View {
                             SelectCurrency(leftCurrency: $leftCurrency, rightCurency: $rightCurency)
                         }
                         
-                        TextField("Amount", text: $leftAmount)
+                        TextField("Amount", text: $rightAmount, onEditingChanged: { typing in
+                            rightTyping = typing
+                            rightAmountTemp = rightAmount
+                        })
                             .padding(7)
                             .background(Color(UIColor.systemGray6))
                             .cornerRadius(7)
                             .multilineTextAlignment(.trailing)
                             .keyboardType(.numberPad)
+                            .onChange(of: rightTyping ? rightAmount : rightAmountTemp, { oldValue, newValue in
+                                rightAmount = rightCurency.convert(amountString: rightAmount, to: leftCurrency)
+                            })
+                            .onChange(of: rightCurency, { oldValue, newValue in
+                                rightAmount = leftCurrency.convert(amountString: leftAmount, to: rightCurency)
+                            })
                     }
                 }
                 .padding()
