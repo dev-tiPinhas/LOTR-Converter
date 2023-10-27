@@ -54,5 +54,8 @@ struct SelectCurrency: View {
 }
 
 #Preview {
-    SelectCurrency(leftCurrency: .constant(.silverPiece), rightCurency: .constant(.goldPiece))
+    SelectCurrency(
+        leftCurrency: .constant(.silverPiece),
+        rightCurency: .constant(.goldPiece)
+    )
 }

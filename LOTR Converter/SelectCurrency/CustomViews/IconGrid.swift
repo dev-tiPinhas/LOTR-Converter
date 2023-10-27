@@ -13,7 +13,7 @@ struct IconGrid: View {
     
     var body: some View {
         LazyVGrid(columns: gridLayout) {
-            ForEach(0..<5) { index in
+            ForEach(0..<6) { index in
                 if Currency.allCases[index] == currency {
                     CurrencyIcon(currencyImage: CurrencyImage.allCases[index].rawValue, currencyText: CurrencyText.allCases[index].rawValue)
                         .overlay(RoundedRectangle(cornerRadius: 25)
